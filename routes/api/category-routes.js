@@ -7,7 +7,7 @@ router.get('/', async (req, res) => {
 
     try {
     //get variable to grab all records of the Catergory Model
-    const categoryData = await Category.finALl({
+    const categoryData = await Category.findAll({
       //also including all the records from product as well
       include: [{ model: Product }],
     });
@@ -51,27 +51,29 @@ router.post('/', async (req, res) => {
   }
 });
 
-router.put('/:id', (req, res) => {
+router.put('/:id', async (req, res) => {
   // update a category by its `id` value
-  try{
+  
     //creating a variable to find the category by ID
-    const categoryData = Category.findByPk(req.params.id);
-    // checking if empty or not
-    if (!categoryData) {
-      res.status(404).json({ message: 'Ruh Row Raggy' });
-      return;
-    }
-    //saving the caterogry found by the ID ....this feels wrong...?
-    const updateCategoryData = categoryData.save();   
-    //response of category Data
-    res.status(200).json(updateCategoryData);
-
-  } catch (err) {
-    res.status(400).json(err);
-
-    }
-  }
-);
+    await Category.update(
+      {
+        id: req.body.id,
+        category_name: req.body.category_name,
+        
+      },
+      {
+        where: {
+          category_name: req.params.category_name,
+        }
+      },
+    )
+      .then((updatedCategory) => {
+        // Sends the updated book as a json response
+      res.status(200).json(updatedCategory);
+      })
+         
+      .catch ((err) => res.status(400).json(err));
+});
 
 //Route to delete a category by its `id` value
 router.delete('/:id', async (req, res) => {
