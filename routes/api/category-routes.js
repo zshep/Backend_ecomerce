@@ -37,6 +37,9 @@ router.get('/:id', async (req, res) => {
         attributes: ['product_name'],  
         },
       });
+      
+      
+      
       // checking to see if OneCategory data exist
       if (!oneCategoryData) {
         console.log('getting a single id category did not work');
@@ -60,43 +63,44 @@ router.post('/', async (req, res) => {
     //response for route
     res.status(200).json(NewCategoryData);
     } catch (err) {
-    res.status(400).json(err);
+    res.status(500).json(err);
   }
 });
 
+// update a category by its `id` value
 router.put('/:id', async (req, res) => {
-  // update a category by its `id` value
-  
-    //creating a variable to find the category by ID
-    await Category.update(
-      {
-        id: req.body.id,
-        category_name: req.body.category_name,
-     },
-      {
-        where: {
-          category_name: req.params.category_name,
-        }
-      },
-    )
-      .then((updatedCategory) => {
-        // Sends the updated book as a json response
-      res.status(200).json(updatedCategory);
-      })
-         
-      .catch ((err) => res.status(400).json(err));
+    
+  try {  
+    const updatedCategory = await Category.update(
+    { category_name: req.body.category_name,},   
+     { where: { id: req.params.id,}},  
+    );
+       // Sends the updated Category as a json response
+      console.log(updatedCategory);
+       res.status(200).json(updatedCategory);
+    }catch{ (err) => res.status(400).json(err);
+      console.log('category put/id did not work')
+    }
 });
 
 //Route to delete a category by its `id` value
 router.delete('/:id', async (req, res) => {
   //creating variable to grab category by id
-  const categoryData = Category.findByPk(req.params.id);
-  if (!categoryData) {
-    res.status(404).json({ message: 'Ruh Row Raggy' });
+  try{
+  const DeleteCategoryData = await Category.destroy(
+   {where : { id: req.params.id}}
+   );
+    //checking if empty
+   if (!DeleteCategoryData) {
+    console.log('no category to delete')
+    res.status(404).json(err);
     return;
+    }
+  // responding 
+    res.status(200).json(DeleteCategoryData);
+  } catch (err) {
+  res.status(500).json(err);
   }
-  await categoryData.destroy();
-  console.info(`${categoryData} was deleted`)
-});
+  });
 
 module.exports = router;

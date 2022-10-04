@@ -1,5 +1,6 @@
 const router = require('express').Router();
 const { Product, Category, Tag, ProductTag } = require('../../models');
+const { findByPk } = require('../../models/Category');
 
 // The `/api/products` endpoint
 
@@ -13,7 +14,7 @@ router.get('/', async (req, res) => {
       attributes: ['id', 'product_name', 'price','stock','category_id'],
 
       include: [{ model: Category,
-        attributes: ['catergory_name'],
+        attributes: ['category_name'],
        }, 
        //including  Tag data
         { model: Tag, 
@@ -33,15 +34,32 @@ router.get('/', async (req, res) => {
 });
 
 // get one product
-router.get('/:id', (req, res) => {
+router.get('/:id', async (req, res) => {
   // find a single product by its `id`
-  // be sure to include its associated Category and Tag data
+  try{
+    const ProductIdData = await findByPk(req.params.id, {
+      // be sure to include its associated Category and Tag data
+      include: [{
+        model: Category, attributes: ['category_name'] ,
+        model: Tag, attributes: ['tag_name']
+        }]
+      });
+      if (!ProductIdData) {
+        res.status(404).json({message: 'ruh, roh, Rorge. cant find product by id'});
+        return;
+      }
+      res.status(200).json(ProductIdData);
+    }catch(err) {
+      res.status(500).json(err);
+    }
 });
 
 // create new product
 router.post('/', (req, res) => {
+  
+  
   /* req.body should look like this...
-    {
+  {
       product_name: "Basketball",
       price: 200.00,
       stock: 3,
@@ -112,8 +130,23 @@ router.put('/:id', (req, res) => {
     });
 });
 
-router.delete('/:id', (req, res) => {
+router.delete('/:id', async (req, res) => {
   // delete one product by its `id` value
+  try{
+    const DeleteProductData = await Category.destroy(
+     {where : { id: req.params.id}}
+     );
+      //checking if empty
+     if (!DeleteProductData) {
+      console.log('no product to delete')
+      res.status(404).json(err);
+      return;
+      }
+    // responding 
+      res.status(200).json(DeleteProductData);
+    } catch (err) {
+    res.status(500).json(err);
+    }
 });
 
 module.exports = router;
