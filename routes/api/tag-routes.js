@@ -85,12 +85,27 @@ router.put('/:id', async (req, res) => {
       
        res.status(200).json(updatedTag);
     }catch{ (err) => res.status(400).json(err);
-      console.log('Updating Tag did not work')
+      console.log('Updating Tag did not work');
     }
 });
 
-router.delete('/:id', (req, res) => {
+router.delete('/:id', async (req, res) => {
   // delete on tag by its `id` value
+  try{
+    const DeleteTagData = await Tag.destroy(
+     {where : { id: req.params.id}}
+     );
+      //checking if empty
+     if (!DeleteTagData) {
+      console.log('no category to delete')
+      res.status(404).json(err);
+      return;
+      }
+    // responding 
+      res.status(200).json(DeleteTagData);
+    } catch (err) {
+    res.status(500).json(err);
+    }
 });
 
 module.exports = router;
