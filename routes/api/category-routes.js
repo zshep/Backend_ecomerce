@@ -36,14 +36,12 @@ router.get('/:id', async (req, res) => {
         model: Product,
         attributes: ['product_name'],  
         },
-      });
-      
-      
+      });     
       
       // checking to see if OneCategory data exist
       if (!oneCategoryData) {
         console.log('getting a single id category did not work');
-        res.status(404).json( {message: 'There was an error with this prodcut id'});
+        res.status(404).json( {message: 'There was an error with this category id'});
         return;
       }
       res.status(200).json(oneCategoryData);
