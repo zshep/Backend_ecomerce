@@ -97,7 +97,7 @@ router.delete('/:id', async (req, res) => {
      );
       //checking if empty
      if (!DeleteTagData) {
-      console.log('no category to delete')
+      console.log('no tag to delete')
       res.status(404).json(err);
       return;
       }

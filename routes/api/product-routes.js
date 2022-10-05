@@ -37,12 +37,12 @@ router.get('/', async (req, res) => {
 router.get('/:id', async (req, res) => {
   // find a single product by its `id`
   try{
-    const ProductIdData = await findByPk(req.params.id, {
+    const ProductIdData = await Product.findByPk(req.params.id, {
       // Including its associated Category and Tag data
       include: [{
-        model: Category, attributes: ['category_name'] ,
-        model: Tag, attributes: ['tag_name']
-        }]
+        model: Category, attributes: ['category_name']},
+        {model: Tag, attributes: ['tag_name'],
+        }],
       });
       if (!ProductIdData) {
         res.status(404).json({message: 'ruh, roh, Rorge. cant find product by id'});
@@ -50,6 +50,7 @@ router.get('/:id', async (req, res) => {
       }
       res.status(200).json(ProductIdData);
     }catch(err) {
+      console.log('Err',err)
       res.status(500).json(err);
     }
 });
@@ -133,7 +134,7 @@ router.put('/:id', (req, res) => {
 router.delete('/:id', async (req, res) => {
   // delete one product by its `id` value
   try{
-    const DeleteProductData = await Category.destroy(
+    const DeleteProductData = await Product.destroy(
      {where : { id: req.params.id}}
      );
       //checking if empty
@@ -145,6 +146,7 @@ router.delete('/:id', async (req, res) => {
     // responding 
       res.status(200).json(DeleteProductData);
     } catch (err) {
+    console.log(err);
     res.status(500).json(err);
     }
 });
