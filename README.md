@@ -1,5 +1,9 @@
 # Shep's Backend-Ecommerce [![License](https://img.shields.io/badge/License-BSD_3--Clause-blue.svg)](https://opensource.org/licenses/BSD-3-Clause)
-  
+
+ ![Alt text](./screenshot1.jpg?raw=true "Screenshot")
+ ![Alt text](./screenshot2.jpg?raw=true "Screenshot")
+ ![Alt text](./screenshot3.jpg?raw=true "Screenshot")
+
  ## **Table of Contents**
   
  [Description](#id-1)
@@ -40,5 +44,5 @@
   
  Email: zsheperdigian@gmail.com 
 
- Link to video: https://drive.google.com/file/d/1KsUe3eDfPFGMI-jhuZIa_yykBugbQSf5/view
+ Link to video: https://drive.google.com/file/d/1zstS-iMt-23snshT2fjGie43PAPb6WQ2/view
     
